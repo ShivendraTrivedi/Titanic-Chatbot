@@ -1,7 +1,8 @@
 import streamlit as st
 import requests
 from PIL import Image
-import os
+import base64
+from io import BytesIO
 
 # Custom CSS for modern styling
 st.markdown(
@@ -83,10 +84,11 @@ if st.button("Submit"):
             
             # Display the response
             if "response" in response_data:
-                if response_data["response"].endswith(".png"):
-                    # If the response is an image, display it
-                    image_path = response_data["response"]
-                    image = Image.open(image_path)
+                if response_data["response"].startswith("data:image/png;base64,"):
+                    # If the response is a base64-encoded image, decode and display it
+                    image_base64 = response_data["response"].split(",")[1]
+                    image_data = base64.b64decode(image_base64)
+                    image = Image.open(BytesIO(image_data))
                     st.image(image, caption="Visualization", use_column_width=True)
                 else:
                     # If the response is text, display it in a styled box
