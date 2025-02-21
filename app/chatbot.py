@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from io import StringIO
 import os
+import base64
+from io import BytesIO
 
 # Load the Titanic dataset
 df = pd.read_csv("data/titanic.csv")
@@ -28,10 +30,13 @@ def analyze_data(question: str):
         plt.title('Passenger Age Distribution')
         plt.xlabel('Age')
         plt.ylabel('Frequency')
-        image_path = "images/histogram_age.png"
-        plt.savefig(image_path)
+        # Save the plot to a BytesIO object
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
         plt.close()
-        return image_path  # Return the path to the saved image
+        # Encode the image as base64
+        image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        return f"data:image/png;base64,{image_base64}"
 
     # Question 3: What was the average ticket Fare?
     elif "average ticket fare" in question.lower():
@@ -93,10 +98,13 @@ def analyze_data(question: str):
         plt.xlabel('Age')
         plt.ylabel('Frequency')
         plt.legend()
-        image_path = "images/histogram_survival_age.png"
-        plt.savefig(image_path)
+        # Save the plot to a BytesIO object
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
         plt.close()
-        return image_path  # Return the path to the saved image
+        # Encode the image as base64
+        image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        return f"data:image/png;base64,{image_base64}"
 
     # Question 14: What is the average fare for each passenger class?
     elif "average fare for each passenger class" in question.lower():
