@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 from PIL import Image
+import os
 
 # Custom CSS for modern styling
 st.markdown(
@@ -73,34 +74,41 @@ question = st.text_input("Enter your question about the Titanic dataset:", place
 # Submit button
 if st.button("Submit"):
     if question:
-        # Send the question to the backend
-        response = requests.post("https://titanic-chatbot-1.onrender.com/analyze", json={"question": question}).json()
-        
-        # Display the response
-        if "response" in response:
-            if response["response"].endswith(".png"):
-                # If the response is an image, display it
-                image = Image.open(response["response"])
-                st.image(image, caption="Visualization", use_column_width=True)
+        try:
+            # Send the question to the backend
+            backend_url = "https://titanic-chatbot-1.onrender.com/analyze"
+            response = requests.post(backend_url, json={"question": question})
+            response.raise_for_status()  # Raise an error for bad status codes
+            response_data = response.json()
+            
+            # Display the response
+            if "response" in response_data:
+                if response_data["response"].endswith(".png"):
+                    # If the response is an image, display it
+                    image_path = response_data["response"]
+                    image = Image.open(image_path)
+                    st.image(image, caption="Visualization", use_column_width=True)
+                else:
+                    # If the response is text, display it in a styled box
+                    st.markdown(
+                        f"""
+                        <div style="
+                            background-color: #ffffff;
+                            padding: 20px;
+                            border-radius: 10px;
+                            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                            margin-top: 20px;
+                        ">
+                            <h3>Response:</h3>
+                            <p>{response_data["response"]}</p>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
             else:
-                # If the response is text, display it in a styled box
-                st.markdown(
-                    f"""
-                    <div style="
-                        background-color: #ffffff;
-                        padding: 20px;
-                        border-radius: 10px;
-                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-                        margin-top: 20px;
-                    ">
-                        <h3>Response:</h3>
-                        <p>{response["response"]}</p>
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
-        else:
-            st.error("Failed to get a response from the server.")
+                st.error("Failed to get a valid response from the server.")
+        except requests.exceptions.RequestException as e:
+            st.error(f"An error occurred while communicating with the server: {e}")
     else:
         st.warning("Please enter a question.")
 
