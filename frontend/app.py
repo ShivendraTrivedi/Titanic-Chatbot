@@ -74,7 +74,7 @@ question = st.text_input("Enter your question about the Titanic dataset:", place
 if st.button("Submit"):
     if question:
         # Send the question to the backend
-        response = requests.post("http://localhost:8000/analyze", json={"question": question}).json()
+        response = requests.post("https://titanic-chatbot-1.onrender.com", json={"question": question}).json()
         
         # Display the response
         if "response" in response:
