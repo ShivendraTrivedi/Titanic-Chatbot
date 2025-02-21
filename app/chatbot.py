@@ -2,16 +2,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from io import StringIO
+import os
 
 # Load the Titanic dataset
 df = pd.read_csv("data/titanic.csv")
 
-def analyze_data(question: str):
-    
-
-    # Handle missing values in 'age' and 'Fare' columns
+# Handle missing values in 'age' and 'Fare' columns
     df['Age'].fillna(df['Age'].median(), inplace=True)
     df['Fare'].fillna(df['Fare'].median(), inplace=True)
+
+def analyze_data(question: str):
+    
+    if not os.path.exists("images"):
+        os.makedirs("images")
 
     # Question 1: What percentage of passengers were male?
     if "percentage of passengers were male" in question.lower():
@@ -19,13 +22,16 @@ def analyze_data(question: str):
         return f"{male_percentage:.2f}% of passengers were male."
 
     # Question 2: Show a histogram of passenger ages
-    elif "histogram of passenger ages" in question.lower():
+    if "histogram of passenger ages" in question.lower():
+        plt.figure(figsize=(8, 6))
         plt.hist(df['Age'], bins=20, color='blue', edgecolor='black')
         plt.title('Passenger Age Distribution')
         plt.xlabel('Age')
         plt.ylabel('Frequency')
-        plt.show()
-        return "Here is the histogram of passenger ages."
+        image_path = "images/histogram_age.png"
+        plt.savefig(image_path)
+        plt.close()
+        return image_path  # Return the path to the saved image
 
     # Question 3: What was the average ticket Fare?
     elif "average ticket fare" in question.lower():
@@ -80,14 +86,17 @@ def analyze_data(question: str):
 
     # Question 13: What is the age distribution of survivors vs. non-survivors?
     elif "age distribution of survivors vs. non-survivors" in question.lower():
+        plt.figure(figsize=(8, 6))
         plt.hist(df[df['Survived'] == 1]['Age'], bins=20, alpha=0.5, label='Survived')
         plt.hist(df[df['Survived'] == 0]['Age'], bins=20, alpha=0.5, label='Did not survive')
         plt.title('Age Distribution of Survivors vs. Non-Survivors')
         plt.xlabel('Age')
         plt.ylabel('Frequency')
         plt.legend()
-        plt.show()
-        return "Here is the age distribution of survivors vs. non-survivors."
+        image_path = "images/histogram_survival_age.png"
+        plt.savefig(image_path)
+        plt.close()
+        return image_path  # Return the path to the saved image
 
     # Question 14: What is the average fare for each passenger class?
     elif "average fare for each passenger class" in question.lower():
