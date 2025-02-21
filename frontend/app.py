@@ -108,6 +108,6 @@ if st.button("Submit"):
 st.markdown(
     """
     ---
-    **Note:** This chatbot is powered by Streamlit and a custom backend. For more information, visit the [GitHub repository](#).
+    **Note:** This chatbot is powered by Streamlit and a custom backend. For more information, visit the [GitHub repository](https://github.com/ShivendraTrivedi/Titanic-Chatbot).
     """
 )
