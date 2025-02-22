@@ -1,4 +1,6 @@
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 from io import StringIO
@@ -9,9 +11,9 @@ from io import BytesIO
 # Load the Titanic dataset
 df = pd.read_csv("data/titanic.csv")
 
-# Handle missing values in 'age' and 'Fare' columns
-    df['Age'].fillna(df['Age'].median(), inplace=True)
-    df['Fare'].fillna(df['Fare'].median(), inplace=True)
+# Handle missing values in 'Age' and 'Fare' columns
+df['Age'].fillna(df['Age'].median(), inplace=True)
+df['Fare'].fillna(df['Fare'].median(), inplace=True)
 
 def analyze_data(question: str):
     
