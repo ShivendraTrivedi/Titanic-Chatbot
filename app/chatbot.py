@@ -26,7 +26,7 @@ def analyze_data(question: str):
         return f"{male_percentage:.2f}% of passengers were male."
 
     # Question 2: Show a histogram of passenger ages
-    if "histogram of passenger ages" in question.lower():
+    elif "histogram of passenger ages" in question.lower():
         plt.figure(figsize=(8, 6))
         plt.hist(df['Age'], bins=20, color='blue', edgecolor='black')
         plt.title('Passenger Age Distribution')
